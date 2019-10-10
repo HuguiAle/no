@@ -1,33 +1,35 @@
 
 /************************ Adafruit IO Configuration *******************************/
 
-// visit io.adafruit.com if you need to create an account,
-// or if you need your Adafruit IO key.
+// visite io.adafruit.com si necesita crear una cuenta,
+// o si necesita su clave Adafruit IO.
 #define IO_USERNAME    "Hugui_Ale" // nombre del usuario crado en io.adafruit
 #define IO_KEY         "31f4aac4218d400aa0cc0141b9217e6b" // la clave que te da
 
 /******************************* WIFI Configuration **************************************/
 
-#define WIFI_SSID       "Flia Duarte"
-#define WIFI_PASS       "alejandra"
+#define WIFI_SSID       "" //el nombre de la red wifi en el cual te vas a conectar
+#define WIFI_PASS       "" // la contraseña del wifi
 
-#include "AdafruitIO_WiFi.h"
+#include "AdafruitIO_WiFi.h" // este sale error. no conecta al servidor
 AdafruitIO_WiFi io(IO_USERNAME, IO_KEY, WIFI_SSID, WIFI_PASS);
 
 /************************ Main Program Starts Here *******************************/
+// este es el programa
+
 #include <ESP8266WiFi.h>
 #include <AdafruitIO.h>
 #include <Adafruit_MQTT.h>
 #include <ArduinoHttpClient.h>
 
-#define LED_PIN 0
+#define LED_PIN 16
 #define OTHER_PIN 2
 
 // button state
 int current = 0;
 int last = 0;
 
-// set up the 'command' feed
+// configurar el feed 'comando'
 AdafruitIO_Feed *command = io.feed("lights");
 
 void setup() {
@@ -42,10 +44,10 @@ void setup() {
   Serial.print("Connecting to Adafruit IO");
   io.connect();
   
-  // set up a message handler for the 'command' feed.
-  // the handleMessage function (defined below)
-  // will be called whenever a message is
-  // received from adafruit io.
+  // configurar un controlador de mensajes para el feed 'comando'.
+  // la función handleMessage(defined below)
+  //se llamará cada vez que se envíe un mensaje
+  // recibido de adafruit io.
   command->onMessage(handleMessage);
 
   // wait for a connection
@@ -62,18 +64,18 @@ void setup() {
 
 void loop() {
 
-  // io.run(); is required for all sketches.
-  // it should always be present at the top of your loop
-  // function. it keeps the client connected to
-  // io.adafruit.com, and processes any incoming data.
+  // io.run (); Se requiere para todos los sketches.
+  // siempre debe estar presente en la parte superior de tu ciclo
+  // function.mantiene al cliente conectado a
+  // io.adafruit.com,y procesa cualquier dato entrante.
   io.run();
 
 
 }
 
-// this function is called whenever a 'command' message
-// is received from Adafruit IO. it was attached to
-// the command feed in the setup() function above.
+// Esta función se llama cada vez que aparece un mensaje de 'comando'
+// se recibe de Adafruit IO. estaba adjunto a
+// el comando se alimenta  setup() en la función anterior.
 void handleMessage(AdafruitIO_Data *data) {
 
   int command = data->toInt();
